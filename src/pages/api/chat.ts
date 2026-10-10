@@ -1,6 +1,8 @@
 import type { APIRoute } from "astro";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+export const prerender = false;
+
 interface ChatMessage {
   role: "user" | "model";
   parts: Array<{ text: string }>;
