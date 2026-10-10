@@ -43,11 +43,10 @@ export const POST: APIRoute = async ({ request }) => {
       headers: { "Content-Type": "application/json" },
     });
   }
-
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash-lite",
+      model: "gemini-3.5-flash-lite",
       systemInstruction: pdfContext
         ? `You are a helpful AI assistant specialized in analyzing documents. The user has uploaded a PDF document. Use the following extracted text as context to answer questions accurately and concisely.\n\nDOCUMENT CONTENT:\n---\n${pdfContext.slice(0, 30000)}\n---\n\nAnswer questions based on this document. If the answer is not in the document, say so clearly.`
         : "You are a helpful AI assistant. Help users with their questions.",
