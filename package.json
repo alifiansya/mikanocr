@@ -13,9 +13,10 @@
     "@types/bun": "latest"
   },
   "dependencies": {
-    "@astrojs/node": "^11.1.7",
+    "@astrojs/vercel": "^11.0.13",
     "@google/generative-ai": "^0.24.1",
     "astro": "^7.3.8",
+    "marked": "^18.1.0",
     "pdfjs-dist": "^6.4.299",
     "tailwindcss": "^4.3.3",
     "tesseract.js": "^7.0.0"

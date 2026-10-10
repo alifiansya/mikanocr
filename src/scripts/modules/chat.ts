@@ -1,6 +1,13 @@
 import type { ChatMessage } from "./types";
 import type { AiConfigManager } from "./aiConfig";
 import { showToast } from "./toast";
+import { marked } from "marked";
+
+// Configure marked options for secure and clean rendering
+marked.setOptions({
+  gfm: true,
+  breaks: true,
+});
 
 export class ChatManager {
   private chatMessages: HTMLElement;
@@ -54,8 +61,8 @@ export class ChatManager {
     this.chatMessages.innerHTML = `
       <div class="chat-message" style="display: flex; gap: 10px; align-items: flex-start;">
         <div style="width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, #f97316, #ea580c); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 12px; color: white;">🍊</div>
-        <div style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; max-width: 480px;">
-          Hi! I'm your mikanocr AI assistant powered by Gemini. Upload a PDF, extract its text, and ask me any questions about the document!
+        <div class="chat-bubble-markdown" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 10px; padding: 10px 14px; max-width: 520px;">
+          <p>Hi! I'm your <strong>MikanOCR</strong> AI assistant powered by Gemini. Upload a PDF, extract its text, and ask me any questions about the document!</p>
         </div>
       </div>
     `;
@@ -95,6 +102,7 @@ export class ChatManager {
     avatar.textContent = isUser ? "U" : isError ? "!" : "🍊";
 
     const bubble = document.createElement("div");
+    bubble.className = isUser ? "" : "chat-bubble-markdown";
     bubble.style.cssText = `
       background: ${isUser ? "rgba(249,115,22,0.12)" : isError ? "rgba(239,68,68,0.1)" : "var(--color-bg-card)"};
       border: 1px solid ${isUser ? "rgba(249,115,22,0.3)" : isError ? "rgba(239,68,68,0.25)" : "var(--color-border)"};
@@ -103,9 +111,9 @@ export class ChatManager {
       font-size: 13px;
       color: ${isError ? "#ef4444" : "var(--color-text-secondary)"};
       line-height: 1.6;
-      max-width: 480px;
-      white-space: pre-wrap;
+      max-width: 520px;
       word-break: break-word;
+      ${isUser ? "white-space: pre-wrap;" : ""}
     `;
 
     if (streaming) {
@@ -114,8 +122,10 @@ export class ChatManager {
           <span></span><span></span><span></span>
         </div>
       `;
-    } else {
+    } else if (isUser) {
       bubble.textContent = content;
+    } else {
+      bubble.innerHTML = marked.parse(content) as string;
     }
 
     msgEl.appendChild(avatar);
@@ -196,7 +206,8 @@ export class ChatManager {
             const parsed = JSON.parse(data);
             if (parsed.text) {
               fullResponse += parsed.text;
-              aiBubble.textContent = fullResponse;
+              // Render incremental response as markdown
+              aiBubble.innerHTML = marked.parse(fullResponse) as string;
               this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
             }
             if (parsed.error) {
@@ -204,12 +215,14 @@ export class ChatManager {
               aiBubble.style.color = "#ef4444";
             }
           } catch {
-            // Ignore parse chunks
+            // Ignore partial chunks
           }
         }
       }
 
       if (fullResponse) {
+        // Final complete parse
+        aiBubble.innerHTML = marked.parse(fullResponse) as string;
         this.history.push({
           role: "model",
           parts: [{ text: fullResponse }],

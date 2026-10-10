@@ -263,7 +263,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    opacity: 0; /* invisible so canvas image is seen, but selectable by native text selection */
+    opacity: 0;
     cursor: text;
     user-select: text;
     -webkit-user-select: text;
@@ -289,6 +289,108 @@
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  /* Rich Markdown Content in AI Chat Bubbles */
+  .chat-bubble-markdown {
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+    word-break: break-word;
+  }
+
+  .chat-bubble-markdown p {
+    margin: 0 0 8px 0;
+  }
+
+  .chat-bubble-markdown p:last-child {
+    margin-bottom: 0;
+  }
+
+  .chat-bubble-markdown h1,
+  .chat-bubble-markdown h2,
+  .chat-bubble-markdown h3,
+  .chat-bubble-markdown h4 {
+    color: var(--color-text-primary);
+    font-weight: 600;
+    margin: 12px 0 6px 0;
+    line-height: 1.3;
+  }
+
+  .chat-bubble-markdown h1 { font-size: 15px; }
+  .chat-bubble-markdown h2 { font-size: 14px; }
+  .chat-bubble-markdown h3 { font-size: 13px; }
+
+  .chat-bubble-markdown ul,
+  .chat-bubble-markdown ol {
+    margin: 6px 0 10px 18px;
+    padding: 0;
+  }
+
+  .chat-bubble-markdown li {
+    margin-bottom: 4px;
+  }
+
+  .chat-bubble-markdown strong {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+
+  .chat-bubble-markdown code {
+    background: rgba(125, 125, 125, 0.15);
+    color: var(--color-accent);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+  }
+
+  .chat-bubble-markdown pre {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    overflow-x: auto;
+    margin: 8px 0;
+  }
+
+  .chat-bubble-markdown pre code {
+    background: transparent;
+    color: var(--color-text-primary);
+    padding: 0;
+    font-size: 12px;
+  }
+
+  .chat-bubble-markdown blockquote {
+    border-left: 3px solid var(--color-accent);
+    padding-left: 10px;
+    margin: 8px 0;
+    color: var(--color-text-muted);
+  }
+
+  .chat-bubble-markdown table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0;
+    font-size: 12px;
+  }
+
+  .chat-bubble-markdown th,
+  .chat-bubble-markdown td {
+    border: 1px solid var(--color-border);
+    padding: 6px 8px;
+    text-align: left;
+  }
+
+  .chat-bubble-markdown th {
+    background: rgba(125, 125, 125, 0.1);
+    color: var(--color-text-primary);
+  }
+
+  .chat-bubble-markdown hr {
+    border: 0;
+    border-top: 1px solid var(--color-border);
+    margin: 12px 0;
   }
 
   .typing-indicator span {
