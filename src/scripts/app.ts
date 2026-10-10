@@ -107,6 +107,7 @@ clearBtn.addEventListener("click", () => {
 
   uploadZone.style.display = "flex";
   workspace.style.display = "none";
+  workspace.classList.add("hidden");
   headerControls.style.display = "none";
   fileInput.value = "";
 });
@@ -126,6 +127,7 @@ async function handleFile(file: File) {
     const totalPages = await pdfViewer.loadDocument(arrayBuffer, file.name);
 
     uploadZone.style.display = "none";
+    workspace.classList.remove("hidden");
     workspace.style.display = "flex";
     workspace.style.flexDirection = "column";
     headerControls.style.display = "flex";
