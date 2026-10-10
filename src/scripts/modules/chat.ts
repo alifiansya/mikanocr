@@ -179,8 +179,15 @@ export class ChatManager {
       });
 
       if (!response.ok) {
-        const err = await response.json();
-        aiBubble.textContent = `Error: ${err.error || "Failed to get response"}`;
+        let errMsg = "Failed to get response";
+        try {
+          const err = await response.json();
+          errMsg = err.error || errMsg;
+        } catch {
+          const text = await response.text().catch(() => "");
+          errMsg = text || `HTTP ${response.status}: ${response.statusText}`;
+        }
+        aiBubble.textContent = `Error: ${errMsg}`;
         aiBubble.style.color = "#ef4444";
         return;
       }
