@@ -1,6 +1,6 @@
 /**
  * mikanocr — Main Application Entry Point
- * Orchestrates modules: Theme, Toast, PdfViewer, TextExtractor, and ChatManager
+ * Orchestrates modules: Theme, Toast, AI Config, PdfViewer, TextExtractor, and ChatManager
  */
 
 import { setupThemeToggle } from "./modules/theme";
@@ -9,9 +9,12 @@ import { terminateOcrWorker } from "./modules/ocr";
 import { PdfViewer } from "./modules/pdf";
 import { TextExtractor } from "./modules/extractor";
 import { ChatManager } from "./modules/chat";
+import { AiConfigManager } from "./modules/aiConfig";
 
 // ─── Initialize Core Services ────────────────────────────────────────────────
 setupThemeToggle();
+
+const aiConfig = new AiConfigManager();
 
 const pdfViewer = new PdfViewer();
 
@@ -29,6 +32,7 @@ const chatManager = new ChatManager({
   chatMessagesId: "chat-messages",
   chatInputId: "chat-input",
   sendBtnId: "send-btn",
+  aiConfig,
   getDocumentContext: () => extractor.getExtractedText(),
   onOpenExtractTab: () => switchTab("text"),
 });
@@ -136,7 +140,7 @@ async function handleFile(file: File) {
   }
 }
 
-// ─── Inject Keyframe Helpers ──────────────────────────────────────────────────
+// ─── Keyframe Helpers ─────────────────────────────────────────────────────────
 const spinStyle = document.createElement("style");
 spinStyle.textContent = `@keyframes spin { to { transform: rotate(360deg); } }`;
 document.head.appendChild(spinStyle);

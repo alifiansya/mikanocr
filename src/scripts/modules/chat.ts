@@ -1,10 +1,12 @@
 import type { ChatMessage } from "./types";
+import type { AiConfigManager } from "./aiConfig";
 import { showToast } from "./toast";
 
 export class ChatManager {
   private chatMessages: HTMLElement;
   private chatInput: HTMLTextAreaElement;
   private sendBtn: HTMLElement;
+  private aiConfig: AiConfigManager;
   private history: ChatMessage[] = [];
   private isLoading = false;
   private getDocumentContext: () => string;
@@ -14,12 +16,14 @@ export class ChatManager {
     chatMessagesId: string;
     chatInputId: string;
     sendBtnId: string;
+    aiConfig: AiConfigManager;
     getDocumentContext: () => string;
     onOpenExtractTab: () => void;
   }) {
     this.chatMessages = document.getElementById(options.chatMessagesId)!;
     this.chatInput = document.getElementById(options.chatInputId) as HTMLTextAreaElement;
     this.sendBtn = document.getElementById(options.sendBtnId)!;
+    this.aiConfig = options.aiConfig;
     this.getDocumentContext = options.getDocumentContext;
     this.onOpenExtractTab = options.onOpenExtractTab;
 
@@ -133,6 +137,15 @@ export class ChatManager {
       return;
     }
 
+    const apiKey = this.aiConfig.getApiKey();
+    const model = this.aiConfig.getSelectedModel();
+
+    if (!apiKey) {
+      showToast("Please enter your Gemini API key in the AI Settings first!", "info");
+      this.aiConfig.openModal();
+      return;
+    }
+
     this.chatInput.value = "";
     this.chatInput.style.height = "auto";
     this.isLoading = true;
@@ -150,6 +163,8 @@ export class ChatManager {
           message: text,
           pdfContext: docContext,
           history: this.history.slice(0, -1),
+          apiKey,
+          model,
         }),
       });
 
@@ -203,7 +218,7 @@ export class ChatManager {
     } catch (err) {
       console.error("Chat error:", err);
       aiBubble.textContent =
-        "Connection error. Please check your GEMINI_API_KEY in .env and try again.";
+        "Connection error. Please check your Gemini API key and try again.";
       aiBubble.style.color = "#ef4444";
     } finally {
       this.isLoading = false;

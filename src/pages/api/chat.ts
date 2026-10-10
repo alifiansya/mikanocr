@@ -10,21 +10,11 @@ interface ChatRequest {
   message: string;
   pdfContext?: string;
   history?: ChatMessage[];
+  apiKey?: string;
+  model?: string;
 }
 
 export const POST: APIRoute = async ({ request }) => {
-  const apiKey = import.meta.env.GEMINI_API_KEY;
-
-  if (!apiKey) {
-    return new Response(
-      JSON.stringify({ error: "GEMINI_API_KEY is not configured" }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-  }
-
   let body: ChatRequest;
   try {
     body = await request.json();
@@ -35,7 +25,22 @@ export const POST: APIRoute = async ({ request }) => {
     });
   }
 
-  const { message, pdfContext, history = [] } = body;
+  // Client-supplied key takes priority; fall back to server environment variable if present
+  const apiKey = body.apiKey?.trim() || import.meta.env.GEMINI_API_KEY;
+
+  if (!apiKey) {
+    return new Response(
+      JSON.stringify({
+        error: "No Gemini API key provided. Please set your API key in the AI Settings in the top bar.",
+      }),
+      {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  }
+
+  const { message, pdfContext, history = [], model: selectedModel = "gemini-2.5-flash" } = body;
 
   if (!message?.trim()) {
     return new Response(JSON.stringify({ error: "Message is required" }), {
@@ -43,10 +48,11 @@ export const POST: APIRoute = async ({ request }) => {
       headers: { "Content-Type": "application/json" },
     });
   }
+
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({
-      model: "gemini-3.5-flash-lite",
+      model: selectedModel,
       systemInstruction: pdfContext
         ? `You are a helpful AI assistant specialized in analyzing documents. The user has uploaded a PDF document. Use the following extracted text as context to answer questions accurately and concisely.\n\nDOCUMENT CONTENT:\n---\n${pdfContext.slice(0, 30000)}\n---\n\nAnswer questions based on this document. If the answer is not in the document, say so clearly.`
         : "You are a helpful AI assistant. Help users with their questions.",
@@ -78,10 +84,11 @@ export const POST: APIRoute = async ({ request }) => {
             }
           }
           controller.enqueue(encoder.encode("data: [DONE]\n\n"));
-        } catch (err) {
+        } catch (err: unknown) {
+          const errMsg = err instanceof Error ? err.message : "Stream generation error";
           controller.enqueue(
             encoder.encode(
-              `data: ${JSON.stringify({ error: "Stream error" })}\n\n`
+              `data: ${JSON.stringify({ error: errMsg })}\n\n`
             )
           );
         } finally {
