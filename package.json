@@ -1,0 +1,26 @@
+{
+  "name": "pdf-ocr-studio",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/bun": "latest"
+  },
+  "dependencies": {
+    "@astrojs/node": "^11.1.7",
+    "@google/generative-ai": "^0.24.1",
+    "astro": "^7.3.8",
+    "pdfjs-dist": "^6.4.299",
+    "tailwindcss": "^4.3.3",
+    "tesseract.js": "^7.0.0"
+  },
+  "trustedDependencies": [
+    "tesseract.js"
+  ]
+}

@@ -1,0 +1,33 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+.output/
+
+# Astro
+.astro/
+
+# env files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# logs
+logs/
+*.log
+
+# caches
+.eslintcache
+.cache
+*.tsbuildinfo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+.vscode/settings.json
