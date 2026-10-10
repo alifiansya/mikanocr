@@ -13,10 +13,8 @@
     "@types/bun": "latest"
   },
   "dependencies": {
-    "@astrojs/vercel": "^11.0.13",
+    "@astrojs/vercel": "11.0.12",
     "@google/generative-ai": "^0.24.1",
-    "@rolldown/binding-linux-x64-gnu": "^1.2.13",
-    "@rolldown/binding-wasm32-wasi": "^1.2.13",
     "astro": "^7.3.8",
     "marked": "^18.1.0",
     "pdfjs-dist": "^6.4.299",

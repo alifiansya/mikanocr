@@ -14,7 +14,6 @@ export default defineConfig({
     },
     ssr: {
       noExternal: ["tesseract.js"],
-      external: ["vite", "rolldown", "@rolldown/binding-linux-x64-gnu"],
     },
   },
 });
