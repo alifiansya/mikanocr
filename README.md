@@ -4,7 +4,7 @@
 
   # MikanOCR
 
-  **Privacy-first, client-side PDF OCR studio and AI document assistant.**
+  **Client-side PDF OCR studio and AI document assistant.**
 
   [![Built with Astro](https://img.shields.io/badge/Astro-v7-BC52EE?style=flat-square&logo=astro&logoColor=white)](https://astro.build)
   [![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS-v4-38BDF8?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
